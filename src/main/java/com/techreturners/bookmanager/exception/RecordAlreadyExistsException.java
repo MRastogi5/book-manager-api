@@ -1,6 +1,6 @@
 package com.techreturners.bookmanager.exception;
 
-public class RecordAlreadyExistsException extends Throwable {
+public class RecordAlreadyExistsException extends RuntimeException {
     private String message;
 
     public RecordAlreadyExistsException(String message) {

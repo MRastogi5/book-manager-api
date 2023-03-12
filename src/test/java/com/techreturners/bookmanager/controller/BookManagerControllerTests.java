@@ -1,6 +1,7 @@
 package com.techreturners.bookmanager.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techreturners.bookmanager.exception.RecordAlreadyExistsException;
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.model.Genre;
 import com.techreturners.bookmanager.service.BookManagerServiceImpl;

@@ -1,5 +1,7 @@
 package com.techreturners.bookmanager.service;
 
+import com.techreturners.bookmanager.exception.RecordAlreadyExistsException;
+import com.techreturners.bookmanager.exception.RecordNotFoundException;
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.model.Genre;
 
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @DataJpaTest
@@ -65,6 +67,7 @@ public class BookManagerServiceTests {
         Book actualResult = bookManagerServiceImpl.getBookById(bookId);
 
         assertThat(actualResult).isEqualTo(book);
+        assertThatException();
     }
 
     //User Story 4 - Update Book By Id Solution
@@ -86,9 +89,36 @@ public class BookManagerServiceTests {
     @Test
     public void testDeleteBookById() {
 
-        bookManagerServiceImpl.deleteBookById(4L);
+        var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
+        Long bookId = 5L;
+        when(mockBookManagerRepository.findById(bookId)).thenReturn(Optional.of(book));
+        bookManagerServiceImpl.deleteBookById(bookId);
 
-        verify(mockBookManagerRepository, times(1)).deleteById(4L);
+        verify(mockBookManagerRepository, times(1)).deleteById(bookId);
+    }
+
+    //User Story 5 - Delete Book By Id
+    @Test
+    public void testDeleteBookByIdRecordNotExist() {
+        Long bookId = 6L;
+        assertThatExceptionOfType(RecordNotFoundException.class).isThrownBy(()->bookManagerServiceImpl.deleteBookById(bookId));
+    }
+
+    @Test
+    public void testUpdateBookByIdRecordNotExists() {
+        Long bookId = 5L;
+
+        var book = new Book(5L, "Book Five", "This is the description for Book Five", "Person Five", Genre.Fantasy);
+        assertThatExceptionOfType(RecordNotFoundException.class).isThrownBy(()->bookManagerServiceImpl.updateBookById(bookId, book));
+    }
+
+    @Test
+    public void testAddABookIfAlreadyExists() {
+
+        var book = new Book(4L, "Book Four", "This is the description for Book Four", "Person Four", Genre.Fantasy);
+        when(mockBookManagerRepository.findById(4L)).thenReturn(Optional.of(book));
+
+        assertThatExceptionOfType(RecordAlreadyExistsException.class).isThrownBy(()->bookManagerServiceImpl.insertBook(book));
     }
 
 }
