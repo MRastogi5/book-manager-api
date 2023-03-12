@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,15 @@ public class BookManagerServiceTests {
         bookManagerServiceImpl.updateBookById(bookId, book);
 
         verify(mockBookManagerRepository, times(1)).save(book);
+    }
+
+    //User Story 5 - Delete Book By Id
+    @Test
+    public void testDeleteBookById() {
+
+        bookManagerServiceImpl.deleteBookById(4L);
+
+        verify(mockBookManagerRepository, times(1)).deleteById(4L);
     }
 
 }

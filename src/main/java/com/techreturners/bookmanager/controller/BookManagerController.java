@@ -45,8 +45,8 @@ public class BookManagerController {
 
     //User Story 5 - Delete Book By Id Solution
     @DeleteMapping({"/{bookId}"})
-    public void deleteBookById(@PathVariable("bookId") Long bookId) {
+    public ResponseEntity<HttpStatus> deleteBookById(@PathVariable("bookId") Long bookId) {
         bookManagerService.deleteBookById(bookId);
-        return ;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

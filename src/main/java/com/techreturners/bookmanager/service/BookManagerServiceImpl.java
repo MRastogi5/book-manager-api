@@ -47,7 +47,6 @@ public class BookManagerServiceImpl implements BookManagerService {
     @Override
     public void deleteBookById(Long bookId) {
         bookManagerRepository.deleteById(bookId);
-
     }
 
 }
