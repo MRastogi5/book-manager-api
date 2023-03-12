@@ -19,7 +19,7 @@ public class BookManagerServiceImpl implements BookManagerService {
     public List<Book> getAllBooks() throws RecordNotFoundException {
         List<Book> books = new ArrayList<>();
         bookManagerRepository.findAll().forEach(books::add);
-        if (!books.isEmpty())
+        if (books.isEmpty())
             throw new RecordNotFoundException("Book Records Not Found !!!!");
         return books;
     }
