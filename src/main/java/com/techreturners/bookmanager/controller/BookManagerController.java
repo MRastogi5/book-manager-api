@@ -2,6 +2,7 @@ package com.techreturners.bookmanager.controller;
 
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.service.BookManagerService;
+import com.techreturners.bookmanager.service.RecordAlreadyExistsException;
 import com.techreturners.bookmanager.service.RecordNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -40,7 +41,12 @@ public class BookManagerController {
 
     @PostMapping
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        Book newBook = bookManagerService.insertBook(book);
+        Book newBook;
+        try {
+            newBook = bookManagerService.insertBook(book);
+        } catch (RecordAlreadyExistsException exception) {
+            return new ResponseEntity(exception.getMessage(), HttpStatus.CONFLICT);
+        }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("book", "/api/v1/book/" + newBook.getId().toString());
         return new ResponseEntity<>(newBook, httpHeaders, HttpStatus.CREATED);

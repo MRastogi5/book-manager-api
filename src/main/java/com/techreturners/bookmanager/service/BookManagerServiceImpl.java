@@ -25,7 +25,9 @@ public class BookManagerServiceImpl implements BookManagerService {
     }
 
     @Override
-    public Book insertBook(Book book) {
+    public Book insertBook(Book book) throws RecordAlreadyExistsException {
+        if (bookManagerRepository.findById(book.getId()).isPresent())
+            throw new RecordAlreadyExistsException("Book with id : " + book.getId() + " already present in DB !!!");
         return bookManagerRepository.save(book);
     }
 
@@ -44,7 +46,7 @@ public class BookManagerServiceImpl implements BookManagerService {
         Optional<Book> getBook = bookManagerRepository.findById(id);
         if (!getBook.isPresent())
             throw new RecordNotFoundException("Update failed !!! Book with id : " + id + " not Found in DB !!!");
-        Book retrievedBook = bookManagerRepository.findById(id).get();
+        Book retrievedBook = getBook.get();
         retrievedBook.setTitle(book.getTitle());
         retrievedBook.setDescription(book.getDescription());
         retrievedBook.setAuthor(book.getAuthor());
