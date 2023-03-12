@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface BookManagerService {
 
-    List<Book> getAllBooks();
+    List<Book> getAllBooks() throws RecordNotFoundException;
     Book insertBook(Book book);
-    Book getBookById(Long id);
+    Book getBookById(Long id) throws RecordNotFoundException;
 
     //User Story 4 - Update Book By Id Solution
-    void updateBookById(Long id, Book book);
+    void updateBookById(Long id, Book book) throws RecordNotFoundException;
 
-    void deleteBookById(Long bookId);
+    void deleteBookById(Long bookId) throws RecordNotFoundException;
 }

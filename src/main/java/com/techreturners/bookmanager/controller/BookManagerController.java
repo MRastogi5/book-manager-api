@@ -2,6 +2,7 @@ package com.techreturners.bookmanager.controller;
 
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.service.BookManagerService;
+import com.techreturners.bookmanager.service.RecordNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,13 +20,22 @@ public class BookManagerController {
 
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
-        List<Book> books = bookManagerService.getAllBooks();
+        List<Book> books;
+        try {
+            books = bookManagerService.getAllBooks();
+        } catch (RecordNotFoundException exception) {
+            return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(books, HttpStatus.OK);
     }
 
     @GetMapping({"/{bookId}"})
-    public ResponseEntity<Book> getBookById(@PathVariable Long bookId) {
-        return new ResponseEntity<>(bookManagerService.getBookById(bookId), HttpStatus.OK);
+    public ResponseEntity<Book> getBookById(@PathVariable Long bookId)  {
+        try {
+            return new ResponseEntity<>(bookManagerService.getBookById(bookId), HttpStatus.OK);
+        }catch(RecordNotFoundException exception ){
+            return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
@@ -39,14 +49,27 @@ public class BookManagerController {
     //User Story 4 - Update Book By Id Solution
     @PutMapping({"/{bookId}"})
     public ResponseEntity<Book> updateBookById(@PathVariable("bookId") Long bookId, @RequestBody Book book) {
-        bookManagerService.updateBookById(bookId, book);
+        try {
+            bookManagerService.updateBookById(bookId, book);
+        }catch(RecordNotFoundException exception ){
+            return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(bookManagerService.getBookById(bookId), HttpStatus.OK);
     }
 
     //User Story 5 - Delete Book By Id Solution
     @DeleteMapping({"/{bookId}"})
     public ResponseEntity<HttpStatus> deleteBookById(@PathVariable("bookId") Long bookId) {
-        bookManagerService.deleteBookById(bookId);
+        try {
+            bookManagerService.deleteBookById(bookId);
+        }catch(RecordNotFoundException exception ){
+            return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = RecordNotFoundException.class)
+    public ResponseEntity<String> BookRecordNotFoundException(RecordNotFoundException bookRecordNotFoundException) {
+        return new ResponseEntity<String>("Record Not Found", HttpStatus.NOT_FOUND);
     }
 }
