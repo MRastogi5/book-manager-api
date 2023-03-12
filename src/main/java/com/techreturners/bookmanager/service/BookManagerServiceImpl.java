@@ -1,5 +1,7 @@
 package com.techreturners.bookmanager.service;
 
+import com.techreturners.bookmanager.exception.RecordAlreadyExistsException;
+import com.techreturners.bookmanager.exception.RecordNotFoundException;
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.repository.BookManagerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,19 +36,19 @@ public class BookManagerServiceImpl implements BookManagerService {
     @Override
     public Book getBookById(Long id) throws RecordNotFoundException {
 
-        Optional<Book> book = bookManagerRepository.findById(id);
-        if (!book.isPresent())
+        Optional<Book> bookExists = bookManagerRepository.findById(id);
+        if (!bookExists.isPresent())
             throw new RecordNotFoundException("Book with id : " + id + " not Found in DB !!!");
-        return book.get();
+        return bookExists.get();
     }
 
     //User Story 4 - Update Book By Id Solution
     @Override
     public void updateBookById(Long id, Book book) throws RecordNotFoundException  {
-        Optional<Book> getBook = bookManagerRepository.findById(id);
-        if (!getBook.isPresent())
+        Optional<Book> bookExists = bookManagerRepository.findById(id);
+        if (!bookExists.isPresent())
             throw new RecordNotFoundException("Update failed !!! Book with id : " + id + " not Found in DB !!!");
-        Book retrievedBook = getBook.get();
+        Book retrievedBook = bookExists.get();
         retrievedBook.setTitle(book.getTitle());
         retrievedBook.setDescription(book.getDescription());
         retrievedBook.setAuthor(book.getAuthor());
@@ -57,8 +59,8 @@ public class BookManagerServiceImpl implements BookManagerService {
 
     @Override
     public void deleteBookById(Long bookId) throws RecordNotFoundException {
-        Optional<Book> getBook = bookManagerRepository.findById(bookId);
-        if (!getBook.isPresent())
+        Optional<Book> bookExists = bookManagerRepository.findById(bookId);
+        if (!bookExists.isPresent())
             throw new RecordNotFoundException("Delete Failed !!! Book with id : " + bookId + " not Found in DB !!!");
         bookManagerRepository.deleteById(bookId);
     }

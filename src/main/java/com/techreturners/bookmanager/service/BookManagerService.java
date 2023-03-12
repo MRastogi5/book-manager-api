@@ -1,5 +1,7 @@
 package com.techreturners.bookmanager.service;
 
+import com.techreturners.bookmanager.exception.RecordAlreadyExistsException;
+import com.techreturners.bookmanager.exception.RecordNotFoundException;
 import com.techreturners.bookmanager.model.Book;
 
 import java.util.List;

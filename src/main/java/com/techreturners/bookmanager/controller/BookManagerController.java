@@ -2,8 +2,8 @@ package com.techreturners.bookmanager.controller;
 
 import com.techreturners.bookmanager.model.Book;
 import com.techreturners.bookmanager.service.BookManagerService;
-import com.techreturners.bookmanager.service.RecordAlreadyExistsException;
-import com.techreturners.bookmanager.service.RecordNotFoundException;
+import com.techreturners.bookmanager.exception.RecordAlreadyExistsException;
+import com.techreturners.bookmanager.exception.RecordNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

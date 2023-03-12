@@ -1,4 +1,4 @@
-package com.techreturners.bookmanager.service;
+package com.techreturners.bookmanager.exception;
 
 public class RecordAlreadyExistsException extends Throwable {
     private String message;
